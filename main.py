@@ -2,12 +2,11 @@ import pandas as pd
 import numpy as np
 import sklearn
 
-
 # import matplotlib.pyplot as plt  # To visualize
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_absolute_error
-
+from sklearn import preprocessing
 
 
 def read_data_from_csv():
@@ -18,11 +17,13 @@ def read_data_from_csv():
 def data_preprocessing(df):
        df.dropna(axis=0, inplace=True)
 
+       df = label_encoding(df)
+
        # Erklärung für die Features https://rstudio-pubs-static.s3.amazonaws.com/594440_b5a14885d559413ab6e57087eddd68e6.html
        # Teilen von df in Daten die Algo sehen darf (X) und das Ergebnis (y)
        x_features = ['duration_ms', 'explicit', 'danceability', 'energy', 'key', 'loudness',
                      'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness',
-                     'valence', 'tempo', 'time_signature']
+                     'valence', 'tempo', 'time_signature', 'name', 'id_artists']
        X = df[x_features]
 
        y_features = 'popularity'
@@ -32,6 +33,14 @@ def data_preprocessing(df):
 
        return X_train, X_test, y_train, y_test
 
+
+def label_encoding(df):
+       encoder = preprocessing.LabelEncoder()
+       df['name'] = encoder.fit_transform(df['name'])
+
+       df['id_artists'] = encoder.fit_transform(df['id_artists'])
+
+       return df
 
 def random_forest_classifier(X_train, X_test, y_train, y_test):
 
