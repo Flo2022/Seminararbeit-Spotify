@@ -19,11 +19,14 @@ def data_preprocessing(df):
 
        df = label_encoding(df)
 
+       df[['year', 'month', 'day']] = df['release_date'].str.split('-', expand=True)
+
+
        # Erklärung für die Features https://rstudio-pubs-static.s3.amazonaws.com/594440_b5a14885d559413ab6e57087eddd68e6.html
        # Teilen von df in Daten die Algo sehen darf (X) und das Ergebnis (y)
        x_features = ['duration_ms', 'explicit', 'danceability', 'energy', 'key', 'loudness',
                      'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness',
-                     'valence', 'tempo', 'time_signature', 'name', 'id_artists']
+                     'valence', 'tempo', 'time_signature', 'name', 'id_artists', 'year', 'month', 'day']
        X = df[x_features]
 
        y_features = 'popularity'
@@ -50,7 +53,6 @@ def random_forest_classifier(X_train, X_test, y_train, y_test):
 
        y_pred = clf.predict(X_test)
        mean_absolute_error(y_pred, y_test)
-       # One-Hot encoding for categorical data
        print(mean_absolute_error)
 
 
